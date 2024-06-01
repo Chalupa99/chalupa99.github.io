@@ -1,3 +1,3 @@
-# chalupa99.github.io
+# About me
 
-Test text
+- [my interests](interests.md)
