@@ -1,4 +1,4 @@
 # About me
 
-- [my interests](interests.md)
+- [hobbies](hobbies.md)
 - [contact](contact.md)
