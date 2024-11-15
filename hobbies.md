@@ -1,6 +1,6 @@
 # Hobbies
 
-[<img src="docs/assets/blackhole.jpg?raw=true" width="150"/>](universe.md)|[**Univerese**](universe.md)
+[<img src="docs/assets/blackhole.jpg?raw=true" width="150"/>](universe.md)|[**Universe**](universe.md)
 
 - history
 - philosophy
