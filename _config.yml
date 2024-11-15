@@ -1,9 +1,9 @@
 # This is a simple theme config file
 
+site_favicon: favicon.ico
 name: About me
 title: Tomáš Chalupa
 logo: "/docs/assets/blurred_bg_light.png" # your photo (or logo) here
-site_favicon: favicon.ico
 description: > # your text below (remove <br> elements if you don't need line breaks)
   <br><br>
   Hi and welcome!
