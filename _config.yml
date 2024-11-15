@@ -1,6 +1,7 @@
 # This is a simple theme config file
 
 name: About me
+title: Tomáš Chalupa
 logo: "/docs/assets/" # your photo (or logo) here
 site_favicon: favicon.ico
 description: > # your text below (remove <br> elements if you don't need line breaks)
