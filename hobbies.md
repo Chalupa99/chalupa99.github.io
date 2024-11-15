@@ -1,4 +1,4 @@
-# Interests
+# Hobbies
 
 - history
 - philosophy
