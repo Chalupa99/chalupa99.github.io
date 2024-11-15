@@ -1,1 +1,1 @@
-![Sheep on grass](/docs/assets/sheep.jpg)
+![Sheep on grass](/docs/assets/sheep.JPG)
