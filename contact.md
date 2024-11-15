@@ -1,2 +1,0 @@
-- [LinkedIn](https://www.linkedin.com/in/tom%C3%A1%C5%A1-chalupa-26a578240)
-- [Instagram](https://www.instagram.com/tomass.ch)
