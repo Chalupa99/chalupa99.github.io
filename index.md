@@ -3,4 +3,4 @@
 # About me
 
 - [hobbies](hobbies.md)
-- [secret santa](secret_santa.html)
+- [secret santa](projects/secret_santa.html)
