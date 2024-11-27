@@ -4,3 +4,4 @@
 
 - [hobbies](hobbies.md)
 - [secret santa](projects/secret_santa.html)
+- [download](projects/downloader.html)
