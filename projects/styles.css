@@ -9,13 +9,14 @@ body {
     height: 100vh;
 }
 
+/* Container Style */
 .container {
-    text-align: center;
-    width: 50%;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+      text-align: center;
+      width: 60%;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
 }
 
 textarea {
@@ -46,4 +47,42 @@ button:hover {
     margin-top: 20px;
     font-size: 1rem;
     text-align: left;
+}
+
+/* Heading Style */
+h1 {
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Paragraph Styling */
+p {
+    font-size: 1.1rem;
+    color: #555;
+    margin: 20px 0;
+}
+
+/* Download Button Styling */
+a.download-btn {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+a.download-btn:hover {
+    background: #218838;
+}
+
+/* Optional message styling */
+.message {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 20px;
 }
