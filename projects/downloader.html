@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download File</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your download should begin automatically...</h1>
+    <p>If it doesn't, <a href="/docs/assets/blackhole.jpg" class="download-btn" download>click here to download manually</a>.</p>
+    <p class="message">We recommend using Google Chrome or Firefox for a smoother experience.</p>
+  </div>
+
+  <script>
+    // Trigger the download automatically after the page loads
+    window.onload = function() {
+      const link = document.createElement('a');
+      link.href = '/docs/assets/blackhole.jpg';
+      link.download = '/docs/assets/blackhole.jpg'; // Optional: specify a default file name
+      link.click();
+    };
+  </script>
+</body>
+</html>
