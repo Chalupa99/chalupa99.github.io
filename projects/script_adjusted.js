@@ -13,7 +13,6 @@ fetch('names.txt')
 
 document.getElementById("generateBtn").addEventListener("click", function () {
     const resultDiv = document.getElementById("result");
-    const messageDiv = document.getElementById("message");
 
     if (availableNames.length === 0) {
         resultDiv.innerHTML = "<p>All names have been drawn!</p>";
@@ -26,7 +25,4 @@ document.getElementById("generateBtn").addEventListener("click", function () {
 
     // Display the drawn name
     resultDiv.innerHTML = `<p>Drawn Name: <strong>${name}</strong></p>`;
-
-    // Display remaining names
-    messageDiv.innerHTML = `Remaining Names: ${availableNames.join(", ") || "None"}`;
 });
