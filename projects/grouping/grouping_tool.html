@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Group Divider by Nationality</title>
+  <title>Group Divider</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
@@ -99,8 +99,15 @@
 </head>
 <body>
   <div class="container">
-    <h1>Group Divider by Nationality</h1>
-    <p>Select your file and set the number of groups to divide participants with mixed nationalities.</p>
+    <h1>Group Divider</h1>
+    <p>
+      <ol>
+        <li>Select a XLSX or CSV file with columns named 'Full Name' and 'Nationality'.</li>
+        <li>Set the number of groups.</li>
+        <li>Generate the groups.</li>
+        <li>Download the generated groups as CSV file.</li>
+      </ol>
+    </p>
 
     <input type="file" id="fileInput" accept=".csv, .xls, .xlsx" />
     <input type="number" id="groupCount" placeholder="Enter number of groups" min="1" />
@@ -146,8 +153,8 @@
     }
 
     function generateGroups(data, groupCount) {
-      const NAME_COLUMNS = ['First Name', 'Last Name']; // Replace or edit as needed
-      const NATIONALITY_COLUMN = 'Nationality';         // Replace as needed
+      const NAME_COLUMNS = ['Full Name']; 
+      const NATIONALITY_COLUMN = 'Nationality';
 
       const entries = data.map(row => ({
         name: NAME_COLUMNS.map(col => row[col]).filter(Boolean).join(' '),
