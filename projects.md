@@ -1,5 +1,5 @@
 # Projects
 
-- [secret santa](projects/secret_santa_adjusted.html)
-- [download](projects/downloader.html)
-- [grouping tool](projects/grouping/grouping_tool.html)
+- [Secret Santa](projects/secret_santa_adjusted.html)
+- [Downloader](projects/downloader.html)
+- [Grouping Tool](projects/grouping/grouping_tool.html)

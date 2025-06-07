@@ -2,5 +2,5 @@
 
 # About me
 
-- [hobbies](hobbies.md)
-- [projects](projects.md)
+- [Hobbies](hobbies.md)
+- [Projects](projects.md)
