@@ -2,132 +2,210 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Nationality-Based Group Divider</title>
+  <title>Group Divider by Nationality</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, button { margin: 10px 0; padding: 8px; }
-    .group { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        text-align: center;
+        width: 60%;
+        background: #fff;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    input[type="file"],
+    input[type="number"] {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    button:hover {
+        background: #218838;
+    }
+
+    a.download-btn {
+        display: inline-block;
+        background: #28a745;
+        color: white;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    a.download-btn:hover {
+        background: #218838;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+        color: #333;
+    }
+
+    p {
+        font-size: 1.1rem;
+        color: #555;
+        margin: 20px 0;
+    }
+
+    .group {
+        text-align: left;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        background-color: #f1f1f1;
+    }
+
+    .message {
+        font-size: 1rem;
+        color: #555;
+        margin-top: 20px;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Group Divider by Nationality</h1>
+    <p>Select your file and set the number of groups to divide participants with mixed nationalities.</p>
 
-<h2>Group Divider by Nationality</h2>
+    <input type="file" id="fileInput" accept=".csv, .xls, .xlsx" />
+    <input type="number" id="groupCount" placeholder="Enter number of groups" min="1" />
+    
+    <button onclick="processFile()">Generate Groups</button>
+    <button onclick="downloadCSV()">Download as CSV</button>
 
-<input type="file" id="fileInput" accept=".csv, .xls, .xlsx" />
-<br>
-<label for="groupCount">Number of groups:</label>
-<input type="number" id="groupCount" min="1" />
-<br>
-<button onclick="processFile()">Generate Groups</button>
-<button onclick="downloadCSV()">Download as CSV</button>
+    <div id="output"></div>
+  </div>
 
-<div id="output"></div>
+  <script>
+    let groupedData = [];
 
-<script>
-  let groupedData = [];
+    function processFile() {
+      const file = document.getElementById('fileInput').files[0];
+      const reader = new FileReader();
+      const groupCount = parseInt(document.getElementById('groupCount').value);
 
-  function processFile() {
-    const file = document.getElementById('fileInput').files[0];
-    const reader = new FileReader();
-    const groupCount = parseInt(document.getElementById('groupCount').value);
+      if (!file || isNaN(groupCount) || groupCount < 1) {
+        alert("Please select a file and enter a valid number of groups.");
+        return;
+      }
 
-    if (!file || isNaN(groupCount) || groupCount < 1) {
-      alert("Please select a file and enter a valid number of groups.");
-      return;
+      const fileName = file.name.toLowerCase();
+      if (fileName.endsWith(".csv")) {
+        reader.onload = (e) => {
+          const data = Papa.parse(e.target.result, { header: true }).data;
+          generateGroups(data, groupCount);
+        };
+        reader.readAsText(file);
+      } else if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) {
+        reader.onload = (e) => {
+          const workbook = XLSX.read(e.target.result, { type: "binary" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const data = XLSX.utils.sheet_to_json(sheet);
+          generateGroups(data, groupCount);
+        };
+        reader.readAsBinaryString(file);
+      } else {
+        alert("Unsupported file type.");
+      }
     }
 
-    const fileName = file.name.toLowerCase();
-    if (fileName.endsWith(".csv")) {
-      reader.onload = (e) => {
-        const data = Papa.parse(e.target.result, { header: true }).data;
-        generateGroups(data, groupCount);
-      };
-      reader.readAsText(file);
-    } else if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) {
-      reader.onload = (e) => {
-        const workbook = XLSX.read(e.target.result, { type: "binary" });
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const data = XLSX.utils.sheet_to_json(sheet);
-        generateGroups(data, groupCount);
-      };
-      reader.readAsBinaryString(file);
-    } else {
-      alert("Unsupported file type.");
-    }
-  }
+    function generateGroups(data, groupCount) {
+      const NAME_COLUMNS = ['First Name', 'Last Name']; // Replace or edit as needed
+      const NATIONALITY_COLUMN = 'Nationality';         // Replace as needed
 
-  function generateGroups(data, groupCount) {
-    const NAME_COLUMNS = ['First Name', 'Last Name']; // Modify here for your actual columns
-    const NATIONALITY_COLUMN = 'Nationality';         // Modify this too
+      const entries = data.map(row => ({
+        name: NAME_COLUMNS.map(col => row[col]).filter(Boolean).join(' '),
+        nationality: row[NATIONALITY_COLUMN] || 'Unknown'
+      })).filter(e => e.name && e.nationality);
 
-    // Combine names if multiple columns
-    const entries = data.map(row => ({
-      name: NAME_COLUMNS.map(col => row[col]).filter(Boolean).join(' '),
-      nationality: row[NATIONALITY_COLUMN] || 'Unknown'
-    })).filter(e => e.name && e.nationality);
+      entries.sort(() => 0.5 - Math.random());
 
-    // Shuffle entries
-    entries.sort(() => 0.5 - Math.random());
+      const byNationality = {};
+      for (const e of entries) {
+        if (!byNationality[e.nationality]) byNationality[e.nationality] = [];
+        byNationality[e.nationality].push(e);
+      }
 
-    // Sort nationalities by frequency
-    const byNationality = {};
-    for (const e of entries) {
-      if (!byNationality[e.nationality]) byNationality[e.nationality] = [];
-      byNationality[e.nationality].push(e);
-    }
+      let groups = Array.from({ length: groupCount }, () => []);
+      let index = 0;
 
-    // Round-robin assignment from each nationality pool
-    let groups = Array.from({ length: groupCount }, () => []);
-    let index = 0;
-
-    while (entries.length) {
-      for (let nationality in byNationality) {
-        const person = byNationality[nationality].shift();
-        if (person) {
-          groups[index % groupCount].push(person);
-          index++;
+      while (entries.length) {
+        for (let nationality in byNationality) {
+          const person = byNationality[nationality].shift();
+          if (person) {
+            groups[index % groupCount].push(person);
+            index++;
+          }
+        }
+        for (let nat in byNationality) {
+          if (byNationality[nat].length === 0) delete byNationality[nat];
         }
       }
-      // Remove empty pools
-      for (let nat in byNationality) {
-        if (byNationality[nat].length === 0) delete byNationality[nat];
-      }
+
+      groupedData = groups;
+      displayGroups(groups);
     }
 
-    groupedData = groups;
-    displayGroups(groups);
-  }
-
-  function displayGroups(groups) {
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-    groups.forEach((group, i) => {
-      const div = document.createElement("div");
-      div.className = "group";
-      div.innerHTML = `<strong>Group ${i + 1}</strong><ul>${group.map(p => `<li>${p.name} (${p.nationality})</li>`).join("")}</ul>`;
-      output.appendChild(div);
-    });
-  }
-
-  function downloadCSV() {
-    if (!groupedData.length) return alert("Generate groups first.");
-    const rows = [["Name", "Nationality", "Group"]];
-    groupedData.forEach((group, i) => {
-      group.forEach(p => {
-        rows.push([p.name, p.nationality, `Group ${i + 1}`]);
+    function displayGroups(groups) {
+      const output = document.getElementById("output");
+      output.innerHTML = "";
+      groups.forEach((group, i) => {
+        const div = document.createElement("div");
+        div.className = "group";
+        div.innerHTML = `<strong>Group ${i + 1}</strong><ul>${group.map(p => `<li>${p.name} (${p.nationality})</li>`).join("")}</ul>`;
+        output.appendChild(div);
       });
-    });
-    const csv = Papa.unparse(rows);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "grouped_output.csv";
-    link.click();
-  }
-</script>
+    }
 
+    function downloadCSV() {
+      if (!groupedData.length) return alert("Generate groups first.");
+      const rows = [["Name", "Nationality", "Group"]];
+      groupedData.forEach((group, i) => {
+        group.forEach(p => {
+          rows.push([p.name, p.nationality, `Group ${i + 1}`]);
+        });
+      });
+      const csv = Papa.unparse(rows);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "grouped_output.csv";
+      link.click();
+    }
+  </script>
 </body>
 </html>
