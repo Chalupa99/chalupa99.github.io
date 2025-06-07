@@ -3,8 +3,8 @@
 site_favicon: favicon.ico
 name: About me
 title: Tomáš Chalupa
-logo: "/docs/assets/blurred_bg_light.png" # your photo (or logo) here
-description: > # your text below (remove <br> elements if you don't need line breaks)
+logo: "/docs/assets/blurred_bg_light.png"
+description: >
   <br><br>
   Hi and welcome!
   <br><br> 
