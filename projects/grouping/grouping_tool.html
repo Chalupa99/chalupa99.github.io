@@ -163,7 +163,8 @@
       let groups = Array.from({ length: groupCount }, () => []);
       let index = 0;
 
-      while (entries.length) {
+
+      while (Object.keys(byNationality).length > 0) {
         for (let nationality in byNationality) {
           const person = byNationality[nationality].shift();
           if (person) {
@@ -171,10 +172,12 @@
             index++;
           }
         }
+
         for (let nat in byNationality) {
           if (byNationality[nat].length === 0) delete byNationality[nat];
         }
       }
+
 
       groupedData = groups;
       displayGroups(groups);
