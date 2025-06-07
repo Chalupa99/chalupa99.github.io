@@ -7,15 +7,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 30px 0;
+      padding: 0;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      overflow-y: auto;
     }
+
 
     .container {
         text-align: center;
@@ -196,17 +198,22 @@
 
     function downloadCSV() {
       if (!groupedData.length) return alert("Generate groups first.");
+
       const rows = [["Name", "Nationality", "Group"]];
       groupedData.forEach((group, i) => {
         group.forEach(p => {
           rows.push([p.name, p.nationality, `Group ${i + 1}`]);
         });
       });
+
       const csv = Papa.unparse(rows);
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+
+      const BOM = '\uFEFF';
+      const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "grouped_output.csv";
+      link.download = "group_division.csv";
       link.click();
     }
   </script>
