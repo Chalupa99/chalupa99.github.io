@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nationality-Based Group Divider</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button { margin: 10px 0; padding: 8px; }
+    .group { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>Group Divider by Nationality</h2>
+
+<input type="file" id="fileInput" accept=".csv, .xls, .xlsx" />
+<br>
+<label for="groupCount">Number of groups:</label>
+<input type="number" id="groupCount" min="1" />
+<br>
+<button onclick="processFile()">Generate Groups</button>
+<button onclick="downloadCSV()">Download as CSV</button>
+
+<div id="output"></div>
+
+<script>
+  let groupedData = [];
+
+  function processFile() {
+    const file = document.getElementById('fileInput').files[0];
+    const reader = new FileReader();
+    const groupCount = parseInt(document.getElementById('groupCount').value);
+
+    if (!file || isNaN(groupCount) || groupCount < 1) {
+      alert("Please select a file and enter a valid number of groups.");
+      return;
+    }
+
+    const fileName = file.name.toLowerCase();
+    if (fileName.endsWith(".csv")) {
+      reader.onload = (e) => {
+        const data = Papa.parse(e.target.result, { header: true }).data;
+        generateGroups(data, groupCount);
+      };
+      reader.readAsText(file);
+    } else if (fileName.endsWith(".xls") || fileName.endsWith(".xlsx")) {
+      reader.onload = (e) => {
+        const workbook = XLSX.read(e.target.result, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(sheet);
+        generateGroups(data, groupCount);
+      };
+      reader.readAsBinaryString(file);
+    } else {
+      alert("Unsupported file type.");
+    }
+  }
+
+  function generateGroups(data, groupCount) {
+    const NAME_COLUMNS = ['First Name', 'Last Name']; // Modify here for your actual columns
+    const NATIONALITY_COLUMN = 'Nationality';         // Modify this too
+
+    // Combine names if multiple columns
+    const entries = data.map(row => ({
+      name: NAME_COLUMNS.map(col => row[col]).filter(Boolean).join(' '),
+      nationality: row[NATIONALITY_COLUMN] || 'Unknown'
+    })).filter(e => e.name && e.nationality);
+
+    // Shuffle entries
+    entries.sort(() => 0.5 - Math.random());
+
+    // Sort nationalities by frequency
+    const byNationality = {};
+    for (const e of entries) {
+      if (!byNationality[e.nationality]) byNationality[e.nationality] = [];
+      byNationality[e.nationality].push(e);
+    }
+
+    // Round-robin assignment from each nationality pool
+    let groups = Array.from({ length: groupCount }, () => []);
+    let index = 0;
+
+    while (entries.length) {
+      for (let nationality in byNationality) {
+        const person = byNationality[nationality].shift();
+        if (person) {
+          groups[index % groupCount].push(person);
+          index++;
+        }
+      }
+      // Remove empty pools
+      for (let nat in byNationality) {
+        if (byNationality[nat].length === 0) delete byNationality[nat];
+      }
+    }
+
+    groupedData = groups;
+    displayGroups(groups);
+  }
+
+  function displayGroups(groups) {
+    const output = document.getElementById("output");
+    output.innerHTML = "";
+    groups.forEach((group, i) => {
+      const div = document.createElement("div");
+      div.className = "group";
+      div.innerHTML = `<strong>Group ${i + 1}</strong><ul>${group.map(p => `<li>${p.name} (${p.nationality})</li>`).join("")}</ul>`;
+      output.appendChild(div);
+    });
+  }
+
+  function downloadCSV() {
+    if (!groupedData.length) return alert("Generate groups first.");
+    const rows = [["Name", "Nationality", "Group"]];
+    groupedData.forEach((group, i) => {
+      group.forEach(p => {
+        rows.push([p.name, p.nationality, `Group ${i + 1}`]);
+      });
+    });
+    const csv = Papa.unparse(rows);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "grouped_output.csv";
+    link.click();
+  }
+</script>
+
+</body>
+</html>
