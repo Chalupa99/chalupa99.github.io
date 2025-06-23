@@ -5,7 +5,6 @@ fetch('data.xlsx')
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const merges = sheet['!merges'] || [];
 
-    // Get full range of the sheet (e.g., A1:D10)
     const range = XLSX.utils.decode_range(sheet['!ref']);
     const table = document.createElement('table');
 
@@ -22,7 +21,11 @@ fetch('data.xlsx')
         const cellRef = XLSX.utils.encode_cell(cellAddress);
         const cell = sheet[cellRef];
         const td = document.createElement(row === range.s.r ? 'th' : 'td');
-        td.textContent = cell ? cell.v : "";
+        if (cell && typeof cell.v === 'number') {
+            td.textContent = Number(cell.v.toFixed(2));
+        } else {
+            td.textContent = cell ? cell.v : "";
+        }
 
         // Check if this is the start of a merged region
         const merge = merges.find(m => m.s.r === row && m.s.c === col);
@@ -77,14 +80,16 @@ document.getElementById('lightbox').addEventListener('click', (e) => {
 
 function copyPaymentInfo() {
   const textToCopy = "SK5811000000002936027373";
+  const payMessage = document.getElementById('pay-message');
 
   navigator.clipboard.writeText(textToCopy).then(() => {
-    const feedback = document.getElementById('copy-feedback');
-    feedback.style.display = 'block';
+    const originalHTML = payMessage.innerHTML;
+    payMessage.innerHTML = "IBAN Copied!";
     setTimeout(() => {
-      feedback.style.display = 'none';
+      payMessage.innerHTML = originalHTML;
     }, 2000);
   }).catch(err => {
-    alert("Failed to copy text: " + err);
+    payMessage.innerHTML = "Copy failed";
+    console.error("Clipboard error:", err);
   });
 }
