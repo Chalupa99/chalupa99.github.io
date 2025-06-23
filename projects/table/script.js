@@ -3,47 +3,49 @@ fetch('data.xlsx')
   .then(ab => {
     const workbook = XLSX.read(ab, { type: 'array' });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: true, defval: "" });
     const merges = sheet['!merges'] || [];
 
+    // Get full range of the sheet (e.g., A1:D10)
+    const range = XLSX.utils.decode_range(sheet['!ref']);
     const table = document.createElement('table');
-    const skipCells = {}; // Track cells covered by merged regions
 
-    data.forEach((row, rowIndex) => {
+    const skipCells = {}; // To skip cells that are inside merged ranges
+
+    for (let row = range.s.r; row <= range.e.r; row++) {
       const tr = document.createElement('tr');
 
-      row.forEach((cell, colIndex) => {
-        const cellKey = `${rowIndex},${colIndex}`;
-        if (skipCells[cellKey]) return; // skip merged-over cells
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellKey = `${row},${col}`;
+        if (skipCells[cellKey]) continue; // Skip merged-over cells
 
-        const td = document.createElement(rowIndex === 0 ? 'th' : 'td');
-        td.textContent = cell;
+        const cellAddress = { r: row, c: col };
+        const cellRef = XLSX.utils.encode_cell(cellAddress);
+        const cell = sheet[cellRef];
+        const td = document.createElement(row === range.s.r ? 'th' : 'td');
+        td.textContent = cell ? cell.v : "";
 
-        // Check if this cell is part of a merged range
-        const merge = merges.find(m =>
-          m.s.r === rowIndex && m.s.c === colIndex
-        );
-
+        // Check if this is the start of a merged region
+        const merge = merges.find(m => m.s.r === row && m.s.c === col);
         if (merge) {
           const rowspan = merge.e.r - merge.s.r + 1;
           const colspan = merge.e.c - merge.s.c + 1;
           if (rowspan > 1) td.setAttribute('rowspan', rowspan);
           if (colspan > 1) td.setAttribute('colspan', colspan);
 
-          // Mark all covered cells to skip
+          // Mark all merged cells to skip
           for (let r = merge.s.r; r <= merge.e.r; r++) {
             for (let c = merge.s.c; c <= merge.e.c; c++) {
-              if (r === rowIndex && c === colIndex) continue;
+              if (r === row && c === col) continue;
               skipCells[`${r},${c}`] = true;
             }
           }
         }
 
         tr.appendChild(td);
-      });
+      }
 
       table.appendChild(tr);
-    });
+    }
 
     document.getElementById('table-container').innerHTML = '';
     document.getElementById('table-container').appendChild(table);
