@@ -24,3 +24,14 @@ th, td {
 th {
   background-color: #eee;
 }
+
+.message-banner {
+  background-color: #e0ffe0;
+  border: 1px solid #00aa00;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #006600;
+  border-radius: 8px;
+}
