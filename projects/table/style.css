@@ -29,9 +29,40 @@ th {
   background-color: #e0ffe0;
   border: 1px solid #00aa00;
   padding: 10px;
-  margin-bottom: 20px;
+  margin: 20px 0px;
   text-align: center;
   font-size: 1.2em;
   color: #006600;
   border-radius: 8px;
+}
+
+#image-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
+#image-section h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.image-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.image-gallery img {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.image-gallery img:hover {
+  transform: scale(1.05);
 }
