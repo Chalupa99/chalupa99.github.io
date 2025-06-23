@@ -109,11 +109,3 @@ th {
 .pay-banner:hover {
   background-color: #d0f5d0;
 }
-
-.copy-feedback {
-  display: none;
-  text-align: center;
-  color: green;
-  font-size: 0.9em;
-  margin-top: 5px;
-}

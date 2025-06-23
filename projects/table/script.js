@@ -80,7 +80,7 @@ document.getElementById('lightbox').addEventListener('click', (e) => {
 
 function copyPaymentInfo() {
   const textToCopy = "SK5811000000002936027373";
-  const payMessage = document.getElementById('pay-message');
+  const payMessage = document.getElementById('pay-banner');
 
   navigator.clipboard.writeText(textToCopy).then(() => {
     const originalHTML = payMessage.innerHTML;
