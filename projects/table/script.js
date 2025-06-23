@@ -54,3 +54,37 @@ fetch('data.xlsx')
     document.getElementById('table-container').textContent = 'Failed to load data.';
     console.error('Error loading xlsx:', err);
   });
+
+
+document.querySelectorAll('.zoomable').forEach(img => {
+  img.addEventListener('click', () => {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightbox.style.display = 'block';
+    lightboxImg.src = img.src;
+  });
+});
+
+document.querySelector('.lightbox-close').addEventListener('click', () => {
+  document.getElementById('lightbox').style.display = 'none';
+});
+
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    e.currentTarget.style.display = 'none';
+  }
+});
+
+function copyPaymentInfo() {
+  const textToCopy = "SK5811000000002936027373";
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    const feedback = document.getElementById('copy-feedback');
+    feedback.style.display = 'block';
+    setTimeout(() => {
+      feedback.style.display = 'none';
+    }, 2000);
+  }).catch(err => {
+    alert("Failed to copy text: " + err);
+  });
+}

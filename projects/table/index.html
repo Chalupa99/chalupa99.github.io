@@ -12,19 +12,24 @@
   <section id="image-section">
     <h2>Photo Documentation</h2>
     <div class="image-gallery">
-      <img src="bowling.jpeg" alt="Bowling" />
-      <img src="food.jpeg" alt="Food" />
+      <img src="bowling.jpeg" alt="Bowling" class="zoomable" />
+      <img src="food.jpeg" alt="Food" class="zoomable" />
     </div>
   </section>
 
+  <div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-content" id="lightbox-img" />
+  </div>  
 
   <div id="table-container">Loading...</div>
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 
-  <div class="message-banner">
-    💳 <strong>IBAN: SK5811000000002936027373</strong>
+  <div id="pay-banner" class="pay-banner" onclick="copyPaymentInfo()">
+    <strong>IBAN: SK5811000000002936027373</strong>
   </div>
+  <span id="copy-feedback" class="copy-feedback">IBAN Copied!</span>
 </body>
 </html>
