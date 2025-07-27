@@ -1,0 +1,88 @@
+:root {
+  --bg-main: #fdfaf6;
+  --text-main: #2e2e2e;
+  --accent-orange: #f4a261;
+  --accent-green: #2a9d8f;
+  --highlight: #e9c46a;
+  --sidebar-bg: #264653;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: var(--sidebar-bg);
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sidebar h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 10px 0;
+}
+
+.sidebar ul li a {
+  color: var(--accent-orange);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  color: var(--highlight);
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+header {
+  font-size: 2.8rem;
+  margin-bottom: 30px;
+  color: var(--accent-green);
+  border-bottom: 3px solid var(--highlight);
+  padding-bottom: 10px;
+}
+
+section {
+  margin-bottom: 50px;
+}
+
+section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: var(--accent-orange);
+}
+
+section p {
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+.quote {
+  font-style: italic;
+  background-color: #ffffff;
+  border-left: 5px solid var(--accent-green);
+  padding: 10px 20px;
+  margin: 15px 0;
+  color: #444;
+}
